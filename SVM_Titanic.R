@@ -1,20 +1,22 @@
-Titanic <- read.csv("titanic.csv")
-CleanData <- Titanic[,-3]
+library(caTools)
+library(e1071)
 
-# Encoding var sex to 1,2
-CleanData$Sex <- factor(CleanData$Sex, 
+titanic <- read.csv("titanic.csv")
+# Removing name variable
+clean.data <- titanic[,-3]
+
+# Encoding variable 'male' and 'female' to 1,2
+clean.data$Sex <- factor(clean.data$Sex, 
                         levels = c("male", "female"), 
                         labels = c(1, 2))
 
 # Splitting the dataset
-library(caTools)
 set.seed(42)
-split = sample.split(CleanData$Survived, SplitRatio = 0.75)
-training_set = subset(CleanData, split == TRUE)
-test_set = subset(CleanData, split == FALSE)
+split = sample.split(clean.data$Survived, SplitRatio = 0.75)
+training_set = subset(clean.data, split == TRUE)
+test_set = subset(clean.data, split == FALSE)
 
 # Fitting data to SVM
-library(e1071)
 classifier = svm(formula = Survived ~., data = training_set,
                  type = 'C-classification', kernel = 'linear')
 
